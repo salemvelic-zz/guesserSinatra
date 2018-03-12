@@ -14,7 +14,11 @@
         <input type='text' name='guess' />
         <input type='submit' value='Guess!' />
     </form>
+
     <p> <%= message %> </p>
-    <p> <%= number %> </p>
+
+    <% if params["cheat"] %> 
+     <p> <%= number %> </p>
+     <%end %>
   </body>
 </html>  

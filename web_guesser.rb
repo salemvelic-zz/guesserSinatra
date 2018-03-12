@@ -12,7 +12,7 @@ class Player
   end
 
   def check_guess(guess = "") 
-  
+
       if @@track  == 0 and guess == @@secret_number
           @@track = 5
           @@secret_number = rand(100)
@@ -40,8 +40,10 @@ class Player
               color = "IndianRed"
               return message, color   
           else 
-              message = "You got it right!"
+              message = "You got it right! New number is generated"
               color = "green"
+              @@track = 5
+              @@secret_number = rand(100)
               return message, color
           end  
       end  
