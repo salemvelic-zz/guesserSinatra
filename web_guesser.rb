@@ -1,37 +1,57 @@
 require 'sinatra'
 require 'sinatra/reloader'
 
-SECRET_NUMBER  = rand(100)
-message = ""
 
-def check_guess(guess = "") 
+class Player
 
-    if guess - 5 > SECRET_NUMBER
-        message = "Way too high"
-        color = "red"
-        return message, color
-    elsif guess > SECRET_NUMBER
-        message = "Too high"
-        color = "DarkRed"
-        return message, color    
-    elsif guess + 5 < SECRET_NUMBER
-        message = "Way too low"
-        color = "FireBrick"
-        return message, color
-    elsif guess < SECRET_NUMBER
-        message = " Too low" 
-        color = "IndianRed"
-        return message, color   
-    else 
-        message = "You got it right!"
-        color = "green"
-        return message, color
-    end    
+  @@track = 5 
+  @@secret_number = rand(100)
+
+  def random_number
+    @@secret_number
+  end
+
+  def check_guess(guess = "") 
+  
+      if @@track  == 0 and guess == @@secret_number
+          @@track = 5
+          @@secret_number = rand(100)
+          return "You won! New number is generated","blue"
+      elsif @@track == 0
+          @@track = 5
+          @@secret_number = rand(100)
+          return "You lost! New number is generated","orange"
+      else
+          @@track -= 1
+          if guess - 5 >  @@secret_number
+              message = "Way too high"
+              color = "red"
+              return message, color
+          elsif guess >  @@secret_number
+              message = "Too high"
+              color = "DarkRed"
+              return message, color    
+          elsif guess + 5 <  @@secret_number
+              message = "Way too low"
+              color = "FireBrick"
+              return message, color
+          elsif guess <  @@secret_number
+              message = " Too low" 
+              color = "IndianRed"
+              return message, color   
+          else 
+              message = "You got it right!"
+              color = "green"
+              return message, color
+          end  
+      end  
+  end
 end
 
 get '/' do
+  player = Player.new
   color = "red"
   guess = params["guess"].to_i
-  message, color = check_guess(guess)
-  erb :index, :locals => { :number => SECRET_NUMBER, :message => message, :color => color}
+  message, color = player.check_guess(guess)
+  erb :index, :locals => { :number => player.random_number(), :message => message, :color => color}
 end
